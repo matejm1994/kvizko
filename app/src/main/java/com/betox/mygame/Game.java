@@ -1,6 +1,7 @@
 package com.betox.mygame;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class Game extends Activity {
 
@@ -30,8 +32,30 @@ public class Game extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
-        setContentView(new GamePanel(this));
+        //setContentView(new GamePanel(this));
+        setContentView(R.layout.activity_game);
 
+
+        Intent i = getIntent();
+        boolean znova = false;
+        if (i != null) {
+            znova = i.getBooleanExtra("znova", false);
+        }
+
+        if (znova) {
+            setContentView(new GamePanel(Game.this));
+        } else {
+
+
+            Button bNewGame = (Button) findViewById(R.id.bStartGame);
+
+            bNewGame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setContentView(new GamePanel(Game.this));
+                }
+            });
+        }
 
 
     }

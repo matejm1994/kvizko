@@ -1,6 +1,8 @@
 package com.betox.mygame;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,10 +35,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private ArrayList<GameObject> items;
     int lives;
 
+    public Context ctx;
+
 
     public GamePanel(Context context)
     {
         super(context);
+
+        this.ctx = context;
 
 
         //add the callback to the surfaceholder to intercept events
@@ -93,9 +99,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         //we can safely start the game loop
         thread.setRunning(true);
+        if(!thread.isAlive())
         thread.start();
 
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
@@ -122,9 +130,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         blokade3.update();
     }
 
+
     @Override
     public void draw(Canvas canvas)
     {
+        super.draw(canvas);
         //print score every 100 frames
         time++;
         if(time==100){
@@ -144,14 +154,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             player.draw(canvas);
 
 
-            //blokade1.draw(canvas);
+            blokade1.draw(canvas);
             blokade2.draw(canvas);
-            //blokade3.draw(canvas);
+            blokade3.draw(canvas);
 
             //collision
             for (GameObject item:items){
                 if(item !=player){
                     if(player.getRectangle().intersect(item.getRectangle())){
+
+                        thread.setRunning(false);
+                        thread.interrupt();
+                        Intent i = new Intent(ctx, QuestionActivity.class);
+                        ctx.startActivity(i);
 
                         //Insert code HERE
 
