@@ -2,22 +2,28 @@ package com.betox.mygame;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
-
+import java.util.Random;
 /**
  * Created by Betox on 19-Nov-15.
  */
 
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
+public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     //background image size
     public static final int WIDTH = 768;
@@ -30,19 +36,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private GameLoop thread;
     private Background bg;
     private Player player;
-    private Blokade blokade1, blokade2, blokade3;
+    private Blokade blokada1, blokada2, blokada3;
     private int time=0;
     private ArrayList<GameObject> items;
-    int lives;
+//    int lives;
+    private int FullTime=0;
+    private Context ctx;
+    private Activity activity;
+    Random r;
 
-    public Context ctx;
+    //If player hit something
+    boolean collTime = false;
 
 
-    public GamePanel(Context context)
-    {
+    public GamePanel(Context context) {
         super(context);
-
-        this.ctx = context;
+        ctx = context;
+        activity = (Activity)ctx;
 
 
         //add the callback to the surfaceholder to intercept events
@@ -55,26 +65,31 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height){}
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder){
+    public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
-        int counter=0;
-        while(retry && counter<1000)
-        {
+        int counter = 0;
+        while (retry && counter < 1000) {
             counter++;
-            try{thread.setRunning(false);
+            try {
+                thread.setRunning(false);
                 thread.join();
                 retry = false;
-            }catch(InterruptedException e){e.printStackTrace();}
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder){
+    public void surfaceCreated(SurfaceHolder holder) {
 
-        lives=3;
+        r=new Random();
+
+
         items=new ArrayList<GameObject>();
 
         CanvasHeight=getHeight();
@@ -85,115 +100,153 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         //create game objects
         player=new Player(BitmapFactory.decodeResource(getResources(), R.drawable.car));
+        items.add(player);
 
         //create 3 blokades: 1 for each row
-        blokade1=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 1);
-        blokade2=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 2);
-        blokade3=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 3);
+        blokada1=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 1);
+        blokada2=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 2);
+        blokada3=new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 3);
 
-        //add object to array for collision detection
-        items.add(player);
-        items.add(blokade1);
-        items.add(blokade2);
-        items.add(blokade3);
+
+
 
         //we can safely start the game loop
         thread.setRunning(true);
-        if(!thread.isAlive())
-        thread.start();
+        if (thread.getState() == Thread.State.NEW)
+        {
+            thread.start();
+        }else{
+            System.exit(0);
+        }
+       // thread.start();
 
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction()==MotionEvent.ACTION_DOWN){
             float tempX=event.getX();
-            if(tempX>player.getX())
-                player.setX(player.getX()+25);
-            else
-                player.setX(player.getX()-25);
+            if(tempX>player.getX()){
+                player.setDx(10);
+                //player.setX(player.getX()+25);
+            }
+            else if(tempX<player.getX()){
+                player.setDx(-10);
+                //player.setX(player.getX()-25);
+            }
         }
-
-
         return super.onTouchEvent(event);
     }
 
 
+    public void update() {
+        if(FullTime%75==0){
+            int x=r.nextInt(3);
+            int y=r.nextInt(3);
+            if(x!=y){
+                items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), x+1));
+                items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), y+1));
+            }else{
+                if(x==0){
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), x+1));
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 3));
+                }if(x==1){
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), x+1));
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 1));
+                }else{
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), x+1));
+                    items.add(new Blokade(BitmapFactory.decodeResource(getResources(), R.drawable.blokade), 1));
+                }
 
-    public void update()
-    {
+            }
+
+        }
+
+        for(GameObject item: items){
+            item.update();
+        }
+
         bg.update();
-        player.update();
-        blokade1.update();
-        blokade2.update();
-        blokade3.update();
+
+
+
     }
 
-
     @Override
-    public void draw(Canvas canvas)
-    {
+    public void draw(Canvas canvas) {
         super.draw(canvas);
         //print score every 100 frames
+        String s="";
+
         time++;
-        if(time==100){
-            System.out.println("Score: "+player.getScore());
-            time=0;
+        FullTime++;
+        if (time == 100) {
+
+            System.out.println("Score: " + player.getScore());
+            System.out.println(FullTime);
+            time = 0;
         }
 
-
-        final float scaleFactorX = (CanvasWidth/(WIDTH*1.0f));
-        final float scaleFactorY = (CanvasHeight/(HEIGHT*1.0f));
-        if(canvas!=null) {
-            final int savedState = canvas.save();
-            canvas.scale(scaleFactorX, scaleFactorY);
-            bg.draw(canvas);
-            canvas.restoreToCount(savedState);
-
-            player.draw(canvas);
+        Paint paint = new Paint();
+        canvas.drawPaint(paint);
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(24);
 
 
-            blokade1.draw(canvas);
-            blokade2.draw(canvas);
-            blokade3.draw(canvas);
-
-            //collision
-            for (GameObject item:items){
-                if(item !=player){
-                    if(player.getRectangle().intersect(item.getRectangle())){
-
-                        thread.setRunning(false);
-                        thread.interrupt();
-                        Intent i = new Intent(ctx, QuestionActivity.class);
-                        ctx.startActivity(i);
-
-                        //Insert code HERE
 
 
-                        System.out.println("Hit");
-                    }else{}
+        final float scaleFactorX = (CanvasWidth / (WIDTH * 1.0f));
+        final float scaleFactorY = (CanvasHeight / (HEIGHT * 1.0f));
+        if(Info.life>0){
+            if (canvas != null) {
+                final int savedState = canvas.save();
+                canvas.scale(scaleFactorX, scaleFactorY);
+                bg.draw(canvas);
+                canvas.restoreToCount(savedState);
 
+                s="Score: "+player.getScore();
+                canvas.drawText(s, 50, 50, paint);
+                canvas.drawText("lives: "+Info.life,50, 450, paint);
+
+
+                //collision
+                for (GameObject item : items) {
+                    if (item != player) {
+                        if (player.getRectangle().intersect(item.getRectangle())) {
+
+
+                            thread.setRunning(false);
+                            thread.interrupt();
+                            Intent i = new Intent(ctx, QuestionActivity.class);
+                            ctx.startActivity(i);
+
+
+                        }
+
+                    }
+                }
+
+                for(GameObject item: items){
+                    //blokade reach end of bottom screen
+                    //we dont need to draw it
+                    if(item.getY()>CanvasHeight){
+
+                    }else{
+                        item.draw(canvas);
+                    }
                 }
             }
-
-
-            //blokade reach end of bottom screen
-            //we dont need to draw it
-            /*
-            if(blokade1.getY()>CanvasHeight)
-            {
-                System.out.println("Outttttttttttttttttttttttt");
-            }else{
-                System.out.println(blokade1.getY()+" "+CanvasHeight);
-                blokade1.draw(canvas);
-            }
-            */
-
-
+        }else{
+            //lives==0 close app
 
         }
+
 
     }
 
 }
+
+
+
+
+

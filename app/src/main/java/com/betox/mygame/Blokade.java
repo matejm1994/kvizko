@@ -23,8 +23,8 @@ public class Blokade extends GameObject {
         final float scaleFactorX = (GamePanel.CanvasWidth / (WIDTHBlokade * 1.0f));
         final float scaleFactorY = (GamePanel.CanvasHeight/(HEIGHTBlokade * 1.0f));
 
-        int tempX=(int)(160*scaleFactorX);
-        int tempY=(int)(90*scaleFactorY);
+        int tempX=(int)(150*scaleFactorX);
+        int tempY=(int)(80*scaleFactorY);
 
         width=tempX;
         height=tempY;
@@ -51,11 +51,6 @@ public class Blokade extends GameObject {
 
 
 
-
-
-
-
-
     }
 
     public void update(){
@@ -66,6 +61,4 @@ public class Blokade extends GameObject {
     public void draw(Canvas canvas){
         canvas.drawBitmap(sprite, x, y, null);
     }
-
-
 }

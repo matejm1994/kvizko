@@ -35,8 +35,8 @@ public class Player extends GameObject{
         int tempX=(int)(90*scaleFactorX);
         int tempY=(int)(160*scaleFactorY);
 
-        width=tempX;
-        height=tempY;
+        width=tempY;
+        height=tempX;
 
         //landscape mode
         x=(GamePanel.CanvasWidth/2)-(tempY/2);
@@ -55,76 +55,40 @@ public class Player extends GameObject{
         long elapsed = (System.nanoTime()-startTime)/1000000;
         if(elapsed>100){
             //increase score by 1 every 100ms
-            score++;
+            Info.tocke++;
             startTime=System.nanoTime();
+        }
+
+        x=(int)(x+(dx));
+        y=(int)(y+(dy));
+
+        dx=(int)(dx*0.99);
+        dy=(int)(dy*0.99);
+
+        if(x<225){
+            dx=0;
+            x=224;
+        }else if(x>520){
+            dx=0;
+            x=524;
         }
     }
 
+    @Override
     public void draw(Canvas canvas){
         //draw player object
         canvas.drawBitmap(spritesheet, x, y, null);
     }
 
     public void setUp(boolean b){up = b;}
-    public int getScore(){return score;}
+    public int getScore(){return Info.tocke/10;}
+    public void setScore(int n){
+        score+=n;
+    }
     public boolean getPlaying(){return playing;}
     public void setPlaying(boolean b){playing = b;}
     public void resetScore(){score = 0;}
 
-
-    //Animacion player
-    /*
-    public Player(Bitmap res, int w, int h, int numFrames) {
-        animation=new Animation();
-        x=100;
-        y=GamePanel.HEIGHT/2;
-        dy=0;
-        score=0;
-        height=h;
-
-        //animation
-        Bitmap[] image =new Bitmap[numFrames];
-        spritesheet= res;
-        for (int i=0; i<image.length; i++){
-            image[i]= Bitmap.createBitmap(spritesheet, i*width, 0, width, height);
-        }
-
-
-        animation.setFrames(image);
-        animation.setDelay(10);
-        startTime=System.nanoTime();
-    }
-
-
-
-    public void update(){
-        long elapsed = (System.nanoTime()-startTime)/1000000;
-        if(elapsed>100){
-            score++;
-            startTime=System.nanoTime();
-        }
-        animation.update();
-
-        if(up){
-            dy=(int)(dya-=1.1);
-        }else{
-            dy=(int)(dya+=1.1);
-        }
-
-        if (dy>14)
-            dy=14;
-
-        if (dy<-14)
-            dy=-14;
-
-        y+=dy*2;
-        dy=0;
-    }
-
-    public void draw(Canvas canvas){
-        canvas.drawBitmap(animation.getImage(), x,y,null);
-    }
-    */
 
 
 

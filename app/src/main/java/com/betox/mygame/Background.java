@@ -13,6 +13,7 @@ public class Background {
 
     public Background(Bitmap res){
         image=res;
+
         //sped for moving background image
         dx=GamePanel.MOVESPEED;
     }

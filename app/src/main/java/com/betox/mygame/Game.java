@@ -17,10 +17,11 @@ import android.widget.Button;
 
 public class Game extends Activity {
 
+    Bundle si;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //turn title off
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -32,8 +33,7 @@ public class Game extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
-        //setContentView(new GamePanel(this));
-        setContentView(R.layout.activity_game);
+
 
 
         Intent i = getIntent();
@@ -45,6 +45,9 @@ public class Game extends Activity {
         if (znova) {
             setContentView(new GamePanel(Game.this));
         } else {
+            //setContentView(new GamePanel(this));
+            setContentView(R.layout.activity_game);
+           // setContentView(new GamePanel(Game.this));
 
 
             Button bNewGame = (Button) findViewById(R.id.bStartGame);
@@ -55,6 +58,7 @@ public class Game extends Activity {
                     setContentView(new GamePanel(Game.this));
                 }
             });
+
         }
 
 
@@ -81,4 +85,5 @@ public class Game extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -1,6 +1,9 @@
 package com.betox.mygame;
 
+import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import java.util.Vector;
 
 import java.util.Vector;
 
@@ -15,6 +18,23 @@ public abstract class GameObject {
     protected int dx;
     protected int width;
     protected int height;
+
+
+    public int getDy() {
+        return dy;
+    }
+
+    public void setDy(int dy) {
+        this.dy = dy;
+    }
+
+    public int getDx() {
+        return dx;
+    }
+
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
 
     public int getX() {
         return x;
@@ -52,5 +72,8 @@ public abstract class GameObject {
         return new Rect(x,y, x+width, y+height);
     }
 
+    public void draw(Canvas canvas){};
+
+    public void update(){}
 
 }

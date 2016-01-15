@@ -10,12 +10,77 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bRestart"
+        android:text="Potrdi"
         android:id="@+id/bRestart"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="65dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginTop="138dp" />
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/tvVprasanje"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <RadioGroup
+        android:id="@+id/grupa"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvVprasanje"
+        android:layout_alignRight="@+id/bRestart"
+        android:layout_alignEnd="@+id/bRestart"
+        android:layout_above="@+id/bRestart">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbOne"
+            android:layout_below="@+id/tvVprasanje"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbTwo"
+            android:layout_below="@+id/rbOne"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbThree"
+            android:layout_below="@+id/rbTwo"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbFour"
+            android:layout_below="@+id/rbThree"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:checked="false" />
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pokaži namig"
+        android:id="@+id/bPokaziHint"
+        android:onClick="bpokaziHint_clicked"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/bRestart"
+        android:layout_toStartOf="@+id/bRestart" />
+
 </RelativeLayout>
