@@ -79,7 +79,7 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
 
-        AsyncGetQuestionTask task = new AsyncGetQuestionTask("question/random");
+        AsyncGetQuestionTask task = new AsyncGetQuestionTask("question/random/"+Info.spin);
         task.execute((Void) null);
 
     }

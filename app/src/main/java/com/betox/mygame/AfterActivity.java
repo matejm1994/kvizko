@@ -56,5 +56,6 @@ public class AfterActivity extends AppCompatActivity {
         Info.life = 3;
         Intent i = new Intent(AfterActivity.this, Game.class);
         i.putExtra("znova", true);
+        startActivity(i);
     }
 }
